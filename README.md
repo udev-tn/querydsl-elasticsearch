@@ -9,9 +9,8 @@ The Elasticsearch module provides integration with the `spring-data-elasticsearc
 Add the following dependencies to your Maven project :
 
 ```XML
-
 <dependency>
-    <groupId>io.udev</groupId>
+    <groupId>io.github.udev-tn</groupId>
     <artifactId>querydsl-elasticsearch</artifactId>
     <version>${querydsl-elasticsearch.version}</version>
 </dependency>
@@ -38,3 +37,14 @@ List<Document> documents = query
         .offset(2)
         .fetch();
  ```
+
+### Building from Source
+
+You don't need to build from source to use Querydsl-elasticsearch (binaries available on mvnrepository.com), but if you
+want to test the most recent version, you can easily build querydsl-elasticsearch with the maven cli.
+
+You need JDK 17 or above to build the main branch.
+
+```shell
+ mvn clean install
+```

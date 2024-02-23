@@ -2,14 +2,15 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>io.udev</groupId>
+    <groupId>io.github.udev-tn</groupId>
     <artifactId>querydsl-elasticsearch</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.0</version>
     <name>Querydsl Elasticsearch</name>
     <description>Elasticsearch support for Querydsl</description>
+    <url>https://github.com/udev-tn/querydsl-elasticsearch</url>
     <properties>
-        <maven.compiler.source>8</maven.compiler.source>
-        <maven.compiler.target>${java.version}</maven.compiler.target>
+        <java.version>17</java.version>
+        <maven.compiler.release>${java.version}</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
@@ -24,6 +25,14 @@
         <elasticsearch-client.version>${elasticsearch-java}</elasticsearch-client.version>
         <spring-data-elasticsearch.version>5.3.0-SNAPSHOT</spring-data-elasticsearch.version>
         <slf4j.version>2.0.12</slf4j.version>
+
+        <gpg-plugin.version>3.1.0</gpg-plugin.version>
+        <maven-changelog-plugin.verion>2.3</maven-changelog-plugin.verion>
+        <maven-site-plugin.version>3.12.1</maven-site-plugin.version>
+        <maven-javadoc-plugin.version>3.6.3</maven-javadoc-plugin.version>
+        <maven-source-plugin.version>3.3.0</maven-source-plugin.version>
+        <versions-maven-plugin.version>2.16.2</versions-maven-plugin.version>
+        <central-publishing-maven-plugin.version>0.3.0</central-publishing-maven-plugin.version>
     </properties>
 
     <issueManagement>
@@ -80,6 +89,43 @@
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>${maven-jar-plugin.version}</version>
             </plugin>
+            <!-- Version -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>versions-maven-plugin</artifactId>
+                <version>${versions-maven-plugin.version}</version>
+            </plugin>
+
+            <!-- Doc -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>${maven-source-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>${maven-javadoc-plugin.version}</version>
+                <configuration>
+                    <doclint>none</doclint>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
 
             <plugin>
                 <groupId>org.jacoco</groupId>
@@ -122,5 +168,60 @@
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>deploy</id>
+
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.sonatype.central</groupId>
+                        <artifactId>central-publishing-maven-plugin</artifactId>
+                        <version>${central-publishing-maven-plugin.version}</version>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <publishingServerId>ossrh</publishingServerId>
+                            <tokenAuth>true</tokenAuth>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>${gpg-plugin.version}</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
+    <licenses>
+        <license>
+            <name>The Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>UDEV Development Team</name>
+            <organization>UDev-tn</organization>
+        </developer>
+    </developers>
+
+    <scm>
+        <url>https://github.com/udev-tn/querydsl-elasticsearch</url>
+        <connection>scm:git:git://github.com/udev-tn/querydsl-elasticsearch.git</connection>
+        <developerConnection>scm:git:ssh://github.com:udev-tn/querydsl-elasticsearch.git</developerConnection>
+    </scm>
 
 </project>
