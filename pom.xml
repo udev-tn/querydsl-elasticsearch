@@ -25,6 +25,7 @@
         <elasticsearch-client.version>${elasticsearch-java}</elasticsearch-client.version>
         <spring-data-elasticsearch.version>5.2.3</spring-data-elasticsearch.version>
         <slf4j.version>2.0.12</slf4j.version>
+        <spring-webflux.version>6.1.4</spring-webflux.version>
 
         <gpg-plugin.version>3.1.0</gpg-plugin.version>
         <maven-changelog-plugin.verion>2.3</maven-changelog-plugin.verion>
@@ -50,6 +51,11 @@
             <groupId>org.springframework.data</groupId>
             <artifactId>spring-data-elasticsearch</artifactId>
             <version>${spring-data-elasticsearch.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webflux</artifactId>
+            <version>${spring-webflux.version}</version>
         </dependency>
 
         <dependency>
