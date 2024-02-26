@@ -13,7 +13,7 @@ import reactor.core.publisher.Mono;
  * @param <T> projection type
  * @param <Q> concrete subtype of querydsl
  */
-public class ReactiveElasticsearchQuery<T, Q extends ElasticsearchQuery<T, Q>>
+public class ReactiveElasticsearchQuery<T, Q extends ReactiveElasticsearchQuery<T, Q>>
         extends AbstractElasticsearchQuery<T, Q>
         implements ReactiveFetchable<T> {
     private final ReactiveElasticsearchOperations operations;
