@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>io.github.udev-tn</groupId>
     <artifactId>querydsl-elasticsearch</artifactId>
-    <version>1.1.0-SNAPSHOT</version>
+    <version>1.1.0</version>
     <name>Querydsl Elasticsearch</name>
     <description>Elasticsearch support for Querydsl</description>
     <url>https://github.com/udev-tn/querydsl-elasticsearch</url>
@@ -31,7 +31,6 @@
         <spring-webflux.version>6.1.4</spring-webflux.version>
 
         <gpg-plugin.version>3.1.0</gpg-plugin.version>
-        <maven-changelog-plugin.verion>2.3</maven-changelog-plugin.verion>
         <maven-site-plugin.version>3.12.1</maven-site-plugin.version>
         <maven-javadoc-plugin.version>3.6.3</maven-javadoc-plugin.version>
         <maven-source-plugin.version>3.3.0</maven-source-plugin.version>
