@@ -6,6 +6,7 @@ import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Predicate;
 import io.udev.querydsl.elasticsearch.document.QTweet;
 import io.udev.querydsl.elasticsearch.document.Tweet;
+import org.assertj.core.api.Condition;
 import org.assertj.core.api.InstanceOfAssertFactories;
 import org.assertj.core.api.ObjectAssert;
 import org.junit.jupiter.api.AfterEach;
@@ -17,6 +18,7 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.elasticsearch.annotations.FieldType;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.data.elasticsearch.core.SearchHit;
 import org.springframework.data.elasticsearch.core.SearchHits;
@@ -26,9 +28,12 @@ import org.springframework.data.elasticsearch.core.convert.MappingElasticsearchC
 import org.springframework.data.elasticsearch.core.mapping.SimpleElasticsearchMappingContext;
 import org.springframework.data.elasticsearch.core.query.Criteria;
 import org.springframework.data.elasticsearch.core.query.CriteriaQuery;
+import org.springframework.data.elasticsearch.core.query.Field;
 import org.springframework.data.elasticsearch.core.query.Query;
+import org.springframework.data.elasticsearch.core.query.SimpleField;
 import org.springframework.data.elasticsearch.core.query.StringQuery;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -84,7 +89,7 @@ class ElasticsearchQueryTest {
         // Given
         Tweet tweet = new Tweet();
         SearchHit<Tweet> hit = new SearchHit<>(null, null, null, 1, null, null, null, null, null, null, tweet);
-        SearchHits<Tweet> hits = new SearchHitsImpl<>(1, EQUAL_TO, 10, null, null, singletonList(hit), null, null);
+        SearchHits<Tweet> hits = new SearchHitsImpl<>(1, EQUAL_TO, 10, null, null, singletonList(hit), null, null, null);
 
         long pageSize = 3;
         long pageNum = 2;
@@ -130,7 +135,7 @@ class ElasticsearchQueryTest {
 
         Tweet tweet = new Tweet();
         SearchHit<Tweet> hit = new SearchHit<>(null, null, null, 1, null, null, null, null, null, null, tweet);
-        SearchHits<Tweet> hits = new SearchHitsImpl<>(1, EQUAL_TO, 10, null, null, singletonList(hit), null, null);
+        SearchHits<Tweet> hits = new SearchHitsImpl<>(1, EQUAL_TO, 10, null, null, singletonList(hit), null, null, null);
 
         // When
         doReturn(hits).when(operations).search(queryCaptor.capture(), eq(Tweet.class));
@@ -172,36 +177,70 @@ class ElasticsearchQueryTest {
     public void whenQueryAString() {
         Query result = doQuery(Q_TWEET.text.contains("ab"));
 
-        assertFirstCriteria(result, anAssert -> anAssert.isEqualTo(Criteria.where("text").contains("ab")));
+        Field field = new SimpleField("text");
+        field.setFieldType(FieldType.Text);
+        assertFirstCriteria(result, anAssert -> anAssert.isEqualTo(Criteria.where(field).contains("ab")));
     }
 
     @Test
     public void whenQueryANumber() {
         Query result = doQuery(Q_TWEET.views.between(2, 7));
 
-        assertFirstCriteria(result, anAssert -> anAssert.isEqualTo(Criteria.where("views").between(2, 7)));
+        assertFirstCriteria(result, anAssert -> anAssert.is(
+                new Condition<>(arg -> { // custom equals
+                    boolean isValid = true;
+                    if (arg instanceof Criteria criteria) {
+                        Criteria.CriteriaEntry entry = criteria.getQueryCriteriaEntries().iterator().next();
+
+                        if (entry instanceof Collection<?> values) {
+                            isValid = values.iterator().next().toString().equals("2");
+                            isValid &= values.iterator().next().toString().equals("7");
+                        }
+                        isValid &= Criteria.OperationKey.BETWEEN.equals(entry.getKey());
+                    }
+                    return isValid;
+                }, "")
+        ));
     }
 
     @Test
     public void whenQueryANullity() {
         Query result = doQuery(Q_TWEET.author.isNotNull());
 
-        assertFirstCriteria(result, anAssert -> anAssert.isEqualTo(Criteria.where("author").exists().not()));
+        Field field = new SimpleField("author");
+        field.setFieldType(FieldType.Object);
+        assertFirstCriteria(result, anAssert -> anAssert.isEqualTo(Criteria.where(field).exists()));
     }
 
     @Test
     public void whenQueryEquality() {
-        String username = randomUUID().toString();
+        String username = randomUUID().toString().split("-")[0];
         Query result = doQuery(Q_TWEET.author.username.eq(username));
 
-        assertFirstCriteria(result, anAssert -> anAssert.isEqualTo(Criteria.where("author.username").is(username)));
+        Field field = new SimpleField("author.username");
+        field.setFieldType(FieldType.Text);
+        assertFirstCriteria(result, anAssert -> anAssert.isEqualTo(Criteria.where(field).is(username)));
     }
 
     @Test
     public void whenQueryCollection() {
         Query result = doQuery(Q_TWEET.views.in(10, 20));
 
-        assertFirstCriteria(result, anAssert -> anAssert.isEqualTo(Criteria.where("views").in(10, 20)));
+        assertFirstCriteria(result, anAssert -> anAssert.is(
+                new Condition<>(arg -> { // custom equals
+                    boolean isValid = true;
+                    if (arg instanceof Criteria criteria) {
+                        Criteria.CriteriaEntry entry = criteria.getQueryCriteriaEntries().iterator().next();
+
+                        if (entry instanceof Collection<?> values) {
+                            isValid = values.iterator().next().toString().equals("10");
+                            isValid &= values.iterator().next().toString().equals("20");
+                        }
+                        isValid &= Criteria.OperationKey.IN.equals(entry.getKey());
+                    }
+                    return isValid;
+                }, "")
+        ));
     }
 
 }
