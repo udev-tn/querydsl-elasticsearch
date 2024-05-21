@@ -15,27 +15,27 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
         <querydsl.version>5.1.0</querydsl.version>
-        <junit.version>5.10.1</junit.version>
+        <junit.version>5.10.2</junit.version>
         <jacoco-plugin.version>0.8.11</jacoco-plugin.version>
         <maven-jar-plugin.version>3.3.0</maven-jar-plugin.version>
         <jetbrains-annotations.version>24.1.0</jetbrains-annotations.version>
-        <reactor-test.version>3.6.3</reactor-test.version>
+        <reactor-test.version>3.6.6</reactor-test.version>
         <assertj.version>3.25.3</assertj.version>
-        <mockito.version>5.10.0</mockito.version>
+        <mockito.version>5.12.0</mockito.version>
 
         <json-path.version>2.9.0</json-path.version>
         <elasticsearch-java>7.17.18</elasticsearch-java>
         <elasticsearch-client.version>${elasticsearch-java}</elasticsearch-client.version>
         <spring-data-elasticsearch.version>5.3.0</spring-data-elasticsearch.version>
-        <slf4j.version>2.0.12</slf4j.version>
-        <spring-webflux.version>6.1.4</spring-webflux.version>
+        <slf4j.version>2.0.13</slf4j.version>
+        <spring-webflux.version>6.1.7</spring-webflux.version>
 
-        <gpg-plugin.version>3.1.0</gpg-plugin.version>
+        <gpg-plugin.version>3.2.4</gpg-plugin.version>
         <maven-site-plugin.version>3.12.1</maven-site-plugin.version>
         <maven-javadoc-plugin.version>3.6.3</maven-javadoc-plugin.version>
-        <maven-source-plugin.version>3.3.0</maven-source-plugin.version>
+        <maven-source-plugin.version>3.3.1</maven-source-plugin.version>
         <versions-maven-plugin.version>2.16.2</versions-maven-plugin.version>
-        <central-publishing-maven-plugin.version>0.3.0</central-publishing-maven-plugin.version>
+        <central-publishing-maven-plugin.version>0.4.0</central-publishing-maven-plugin.version>
     </properties>
 
     <issueManagement>
@@ -249,5 +249,12 @@
         <connection>scm:git:git://github.com/udev-tn/querydsl-elasticsearch.git</connection>
         <developerConnection>scm:git:ssh://github.com:udev-tn/querydsl-elasticsearch.git</developerConnection>
     </scm>
+    <repositories>
+        <repository>
+            <id>maven_central</id>
+            <name>Maven Central</name>
+            <url>https://repo.maven.apache.org/maven2/</url>
+        </repository>
+    </repositories>
 
 </project>
