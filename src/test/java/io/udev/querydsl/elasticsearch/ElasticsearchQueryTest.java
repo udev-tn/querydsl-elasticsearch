@@ -243,4 +243,22 @@ class ElasticsearchQueryTest {
         ));
     }
 
+    @Test
+    void whenQueryStringMatchesOperation() {
+        Query result = doQuery(Q_TWEET.text.matches("ab"));
+
+        Field field = new SimpleField("text");
+        field.setFieldType(FieldType.Text);
+        assertFirstCriteria(result, anAssert -> anAssert.isEqualTo(Criteria.where(field).matches("ab")));
+    }
+
+    @Test
+    void whenQueryStringIsEmptyOperation() {
+        Query result = doQuery(Q_TWEET.text.isEmpty());
+
+        Field field = new SimpleField("text");
+        field.setFieldType(FieldType.Text);
+        assertFirstCriteria(result, anAssert -> anAssert.isEqualTo(Criteria.where(field).empty()));
+    }
+
 }
