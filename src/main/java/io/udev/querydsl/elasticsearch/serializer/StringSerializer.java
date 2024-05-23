@@ -44,7 +44,10 @@ class StringSerializer extends OperationSerializer {
     public Criteria accept(@NonNull Operation<?> input, QueryMetadata metadata) {
         Path<?> path = getPath(input.getArg(0));
         String field = toField(path);
-        String[] terms = sanitizeValues(input.getArg(1), metadata);
+        String[] terms = {};
+        if (input.getArgs().size() > 1) { // Detect the operation arguments if they exist.
+            terms = sanitizeValues(input.getArg(1), metadata);
+        }
         if (stringProcessor != null) {
             // Process terms
             for (int idx = 0; idx < terms.length; idx++) {

@@ -22,10 +22,13 @@ public class SerializerFactory {
         // General
         SERIALIZERS.put(Ops.EQ, new EqSerializer());
         SERIALIZERS.put(Ops.NE, new EqSerializer(Criteria::not));
+        // String
         SERIALIZERS.put(Ops.LIKE, new StringSerializer(ConsumeFirstArg.of(Criteria::contains)));
         SERIALIZERS.put(Ops.STRING_CONTAINS, new StringSerializer(ConsumeFirstArg.of(Criteria::contains)));
         SERIALIZERS.put(Ops.STARTS_WITH, new StringSerializer(ConsumeFirstArg.of(Criteria::startsWith)));
         SERIALIZERS.put(Ops.ENDS_WITH, new StringSerializer(ConsumeFirstArg.of(Criteria::endsWith)));
+        SERIALIZERS.put(Ops.MATCHES, new StringSerializer(ConsumeFirstArg.of(Criteria::matches)));
+        SERIALIZERS.put(Ops.STRING_IS_EMPTY, new StringSerializer((criteria, s) -> criteria.empty()));
         // Math
         SERIALIZERS.put(Ops.LT, new MathSerializer(ConsumeFirstArg.of(Criteria::lessThan)));
         SERIALIZERS.put(Ops.GT, new MathSerializer(ConsumeFirstArg.of(Criteria::greaterThan)));
